@@ -8,7 +8,7 @@ pipeline {
   environment {
     APP_VER = "v1.0.${BUILD_ID}"
     // HARBOR_URL = ""
-    DEPLOY_GITREPO_USER = "your_name"    
+    DEPLOY_GITREPO_USER = "rakesh7295"    
     DEPLOY_GITREPO_URL = "github.com/${DEPLOY_GITREPO_USER}/spring-petclinic-helmchart.git"
     DEPLOY_GITREPO_BRANCH = "main"
     DEPLOY_GITREPO_TOKEN = credentials('my-github')
@@ -119,13 +119,13 @@ spec:
       steps {
         container('kaniko') {
           sh "sed -i 's,harbor.example.com,${env.HARBOR_URL},g' Dockerfile"
-          sh "/kaniko/executor --dockerfile Dockerfile --context `pwd` --skip-tls-verify --destination=${env.HARBOR_URL}/library/samples/spring-petclinic:v1.0.${env.BUILD_ID}"
+          sh "/kaniko/executor --dockerfile Dockerfile --context `pwd` --skip-tls-verify --destination=${env.HARBOR_URL}/library-rancher-devsecops-workshop/spring-petclinic:v1.0.${env.BUILD_ID}"
         }
       }
     }
     stage('Image Vulnerability Scan') {
       steps {
-        writeFile file: 'anchore_images', text: "${env.HARBOR_URL}/library/samples/spring-petclinic:v1.0.${env.BUILD_ID}"
+        writeFile file: 'anchore_images', text: "${env.HARBOR_URL}/library-rancher-devsecops-workshop/spring-petclinic:v1.0.${env.BUILD_ID}"
         anchore name: 'anchore_images'
       }
     }
